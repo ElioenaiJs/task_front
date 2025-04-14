@@ -44,21 +44,21 @@ export class DialogInsertTaskComponent {
     console.log('Form values:', this.taskForm.value);
     if (this.taskForm.invalid) return;
 
-    // this.apiService.postService({
-    //   url: UriConstants.CREATE_TASK,
-    //   data: this.taskForm.value,
-    //   headers: {
-    //     'accept': 'application/json',
-    //     'Content-Type': 'application/json'  
-    //   }
-    // }).subscribe({
-    //   next: (response) => {
-    //     console.log('Task created successfully:', response);
-    //     this.dialogRef.close(response); 
-    //   },
-    //   error: (error) => {
-    //     console.error('Error creating task:', error);
-    //   }
-    // });
+    this.apiService.postService({
+      url: UriConstants.CREATE_TASK,
+      data: this.taskForm.value,
+      headers: {
+        'accept': 'application/json',
+        'Content-Type': 'application/json'  
+      }
+    }).subscribe({
+      next: (response) => {
+        console.log('Task created successfully:', response);
+        this.dialogRef.close(response); 
+      },
+      error: (error) => {
+        console.error('Error creating task:', error);
+      }
+    });
   }
 }

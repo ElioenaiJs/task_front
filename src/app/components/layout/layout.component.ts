@@ -8,10 +8,7 @@ export interface Task {
   title: string;
   description: string;
   completed: boolean;
-}
-
-export interface DialogData {
-  animal: 'panda' | 'unicorn' | 'lion';
+  dueDate: string;
 }
 
 @Component({
@@ -30,11 +27,14 @@ export class LayoutComponent implements OnInit {
   }
 
   openDialog() {
-    this.dialog.open(DialogInsertTaskComponent, {
+    const dialogRef = this.dialog.open(DialogInsertTaskComponent, {
       width: '600px', 
-      data: {
-        animal: 'panda',
-      },
+    });
+  
+    dialogRef.afterClosed().subscribe((result) => {
+      if (result) {
+        this.tasks.push(result);
+      }
     });
   }
 
@@ -71,24 +71,6 @@ export class LayoutComponent implements OnInit {
       },
       error: (error) => {
         console.error('Error deleting task:', error);
-      }
-    });
-  }
-
-  createTask(task: Task) {
-    this.userService.postService({
-      url: UriConstants.CREATE_TASK,
-      data: task,
-      headers: {
-        'accept': 'application/json',
-        'Content-Type': 'application/json'  
-      }
-    }).subscribe({
-      next: () => {
-        this.getAllTasks();
-      },
-      error: (error) => {
-        console.error('Error creating task:', error);
       }
     });
   }
