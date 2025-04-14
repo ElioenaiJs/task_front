@@ -36,7 +36,7 @@ export class DialogInsertTaskComponent {
   taskForm = new FormGroup({
     title: new FormControl('', [Validators.required]),
     description: new FormControl('', [Validators.required]), 
-    dueDate: new FormControl<Date | null>(null, [Validators.required]),
+    due_date: new FormControl<Date | null>(null, [Validators.required]),
     completed: new FormControl(false),
   });
 

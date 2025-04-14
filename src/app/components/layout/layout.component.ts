@@ -2,18 +2,19 @@ import { Component, inject, OnInit } from '@angular/core';
 import { ApiService } from '../../../services/api.service';
 import { UriConstants } from '../../../utils/uris.constants';
 import { MatDialog } from '@angular/material/dialog';
+import { CommonModule } from '@angular/common';
 import { DialogInsertTaskComponent } from '../dialog-insert-task/dialog-insert-task.component';
 export interface Task {
   id: number;
   title: string;
   description: string;
   completed: boolean;
-  dueDate: string;
+  due_date: string;
 }
 
 @Component({
   selector: 'app-layout',
-  imports: [],
+  imports: [CommonModule],
   templateUrl: './layout.component.html',
   styleUrl: './layout.component.scss'
 })
@@ -94,6 +95,7 @@ export class LayoutComponent implements OnInit {
     }).subscribe({
       next: (response) => {
         this.tasks = response;
+        console.log(this.tasks);
       },
       error: (error) => {
         console.error('Error fetching tasks:', error);
@@ -170,6 +172,17 @@ export class LayoutComponent implements OnInit {
       error: (error) => {
         console.error('Error fetching tasks:', error);
       }
+    });
+  }
+
+  formatStringDate(dateString: string): string {
+    if (!dateString) return 'Sin fecha';
+    return new Date(dateString).toLocaleString('es-ES', {
+      day: '2-digit',
+      month: '2-digit',
+      year: 'numeric',
+      hour: '2-digit',
+      minute: '2-digit'
     });
   }
 }
