@@ -1,1 +1,24 @@
+// 1. Tailwind 
 @use "tailwindcss";
+
+// 2. Angular Material
+@use '@angular/material' as mat;
+
+// 3. Configuración de Material
+@include mat.core();  
+
+html {
+  @include mat.theme((
+    color: (
+      theme-type: light,
+      primary: mat.$azure-palette,
+      tertiary: mat.$blue-palette,
+    ),
+    typography: Roboto,
+    density: 0,
+  ));
+}
+
+// 4. Estilos globales
+html, body { height: 100%; }
+body { margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif; }
