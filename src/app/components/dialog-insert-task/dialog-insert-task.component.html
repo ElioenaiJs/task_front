@@ -1,0 +1,23 @@
+<div class="mb-4 p-4 ">
+    <h3 class="mb-2">Nueva tarea</h3>
+    <form class="example-form">
+        <mat-form-field class="example-full-width w-full">
+          <mat-label>Descripcion</mat-label>
+          <mat-label>Titulo</mat-label>
+          <input matInput>
+        </mat-form-field>
+        <br>
+        <mat-form-field class="example-full-width w-full">
+          <mat-label>Descripción</mat-label>
+          <textarea matInput></textarea>
+        </mat-form-field>
+        <br>
+        <mat-form-field class="example-full-width w-full">
+            <mat-label>Choose a date</mat-label>
+            <input matInput [matDatepicker]="picker">
+            <mat-hint>MM/DD/YYYY</mat-hint>
+            <mat-datepicker-toggle matIconSuffix [for]="picker"></mat-datepicker-toggle>
+            <mat-datepicker #picker></mat-datepicker>
+        </mat-form-field>          
+    </form>      
+</div>

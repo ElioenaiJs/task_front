@@ -1,12 +1,19 @@
 import { Component, inject, OnInit } from '@angular/core';
 import { ApiService } from '../../../services/api.service';
 import { UriConstants } from '../../../utils/uris.constants';
+import { MatDialog } from '@angular/material/dialog';
+import { DialogInsertTaskComponent } from '../dialog-insert-task/dialog-insert-task.component';
 export interface Task {
   id: number;
   title: string;
   description: string;
   completed: boolean;
 }
+
+export interface DialogData {
+  animal: 'panda' | 'unicorn' | 'lion';
+}
+
 @Component({
   selector: 'app-layout',
   imports: [],
@@ -16,8 +23,19 @@ export interface Task {
 export class LayoutComponent implements OnInit {
   public userService = inject(ApiService);
   public tasks: Task[] = [];
+  public dialog = inject(MatDialog);
+
   ngOnInit() {
     this.getAllTasks();
+  }
+
+  openDialog() {
+    this.dialog.open(DialogInsertTaskComponent, {
+      width: '600px', 
+      data: {
+        animal: 'panda',
+      },
+    });
   }
 
   getAllTasks() {
@@ -110,3 +128,4 @@ export class LayoutComponent implements OnInit {
     });
   }
 }
+
