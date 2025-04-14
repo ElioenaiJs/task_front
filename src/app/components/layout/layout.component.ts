@@ -21,18 +21,22 @@ export class LayoutComponent implements OnInit {
   public userService = inject(ApiService);
   public tasks: Task[] = [];
   public taskPending: Task[] = [];
+  public taskComplet: Task[] = [];
+  public taskOverdue: Task[] = [];
   public dialog = inject(MatDialog);
 
   ngOnInit() {
     this.getAllTasks();
     this.pendingtasks();
+    this.completedtasks();
+    this.overdueTasks();
   }
 
   openDialog() {
     const dialogRef = this.dialog.open(DialogInsertTaskComponent, {
-      width: '600px', 
+      width: '600px',
     });
-  
+
     dialogRef.afterClosed().subscribe((result) => {
       if (result) {
         this.tasks.push(result);
@@ -45,11 +49,11 @@ export class LayoutComponent implements OnInit {
       url: UriConstants.GET_TASKS,
       headers: {
         'accept': 'application/json',
-        'Content-Type': 'application/json'  
+        'Content-Type': 'application/json'
       }
     }).subscribe({
       next: (response) => {
-        this.taskPending = response.filter((task: Task) => task.completed);
+        this.taskPending = response.filter((task: Task) => !task.completed);
       },
       error: (error) => {
         console.error('Error fetching tasks:', error);
@@ -59,13 +63,33 @@ export class LayoutComponent implements OnInit {
       }
     });
   }
- 
+
+  completedtasks() {
+    this.userService.getService({
+      url: UriConstants.GET_TASKS,
+      headers: {
+        'accept': 'application/json',
+        'Content-Type': 'application/json'
+      }
+    }).subscribe({
+      next: (response) => {
+        this.taskComplet = response.filter((task: Task) => task.completed);
+      },
+      error: (error) => {
+        console.error('Error fetching tasks:', error);
+        if (error.status === 422) {
+          console.warn('Validation error:', error.error.detail);
+        }
+      }
+    });
+  }
+
   getAllTasks() {
     this.userService.getService({
       url: UriConstants.GET_TASKS,
       headers: {
         'accept': 'application/json',
-        'Content-Type': 'application/json'  
+        'Content-Type': 'application/json'
       }
     }).subscribe({
       next: (response) => {
@@ -85,7 +109,7 @@ export class LayoutComponent implements OnInit {
       url: UriConstants.DELETE_TASK(id),
       headers: {
         'accept': 'application/json',
-        'Content-Type': 'application/json'  
+        'Content-Type': 'application/json'
       }
     }).subscribe({
       next: () => {
@@ -103,7 +127,7 @@ export class LayoutComponent implements OnInit {
       data: task,
       headers: {
         'accept': 'application/json',
-        'Content-Type': 'application/json'  
+        'Content-Type': 'application/json'
       }
     }).subscribe({
       next: () => {
@@ -120,7 +144,7 @@ export class LayoutComponent implements OnInit {
       url: UriConstants.GET_TASK(id),
       headers: {
         'accept': 'application/json',
-        'Content-Type': 'application/json'  
+        'Content-Type': 'application/json'
       }
     }).subscribe({
       next: (response) => {
@@ -128,6 +152,23 @@ export class LayoutComponent implements OnInit {
       },
       error: (error) => {
         console.error('Error fetching task:', error);
+      }
+    });
+  }
+
+  overdueTasks() {
+    this.userService.getService({
+      url: UriConstants.GET_TASKS_OVER,
+      headers: {
+        'accept': 'application/json',
+        'Content-Type': 'application/json'
+      }
+    }).subscribe({
+      next: (response) => {
+        this.taskOverdue = response;
+      },
+      error: (error) => {
+        console.error('Error fetching tasks:', error);
       }
     });
   }
