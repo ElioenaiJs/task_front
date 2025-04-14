@@ -1,23 +1,51 @@
-<div class="mb-4 p-4 ">
-    <h3 class="mb-2">Nueva tarea</h3>
-    <form class="example-form">
-        <mat-form-field class="example-full-width w-full">
-          <mat-label>Descripcion</mat-label>
-          <mat-label>Titulo</mat-label>
-          <input matInput>
-        </mat-form-field>
-        <br>
-        <mat-form-field class="example-full-width w-full">
-          <mat-label>Descripción</mat-label>
-          <textarea matInput></textarea>
-        </mat-form-field>
-        <br>
-        <mat-form-field class="example-full-width w-full">
-            <mat-label>Choose a date</mat-label>
-            <input matInput [matDatepicker]="picker">
-            <mat-hint>MM/DD/YYYY</mat-hint>
-            <mat-datepicker-toggle matIconSuffix [for]="picker"></mat-datepicker-toggle>
-            <mat-datepicker #picker></mat-datepicker>
-        </mat-form-field>          
-    </form>      
+<div class="p-4 dark:bg-gray-800 border-0 rounded-none">
+    <h3 class="mb-2 text-white font-bold text-xl">Nueva tarea</h3>
+    <form [formGroup]="taskForm" class="space-y-4">
+        <!-- Campo Título -->
+        <div>
+            <label class="block text-sm font-medium text-white mb-1">Título *</label>
+            <input matInput type="text" formControlName="title" required
+                   class="w-full px-3 py-2 bg-gray-700 border border-gray-600 rounded-md text-white placeholder-gray-400
+                          focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent">
+            @if (taskForm.get('title')?.hasError('required') && taskForm.get('title')?.touched) {
+                <p class="mt-1 text-sm text-red-400">El título es requerido</p>
+            }
+        </div>
+
+        <!-- Campo Descripción -->
+        <div>
+            <label class="block text-sm font-medium text-white mb-1">Descripción</label>
+            <textarea formControlName="description"
+                     class="w-full px-3 py-2 bg-gray-700 border border-gray-600 rounded-md text-white placeholder-gray-400
+                            focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                     rows="3"></textarea>
+            @if (taskForm.get('description')?.hasError('required') && taskForm.get('description')?.touched) {
+                <p class="mt-1 text-sm text-red-400">La descripción es requerida</p>
+            }
+        </div>
+
+        <!-- Campo Fecha -->
+        <div>
+            <label class="block text-sm font-medium text-white mb-1">Fecha de vencimiento *</label>
+            <div class="relative">
+                <input type="date" formControlName="dueDate" required
+                       class="w-full px-3 py-2 bg-gray-700 border border-gray-600 rounded-md text-white
+                              focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent
+                              [&::-webkit-calendar-picker-indicator]:invert-[80%]">
+            </div>
+            <p class="mt-1 text-sm text-gray-400">Formato: MM/DD/YYYY</p>
+            @if (taskForm.get('dueDate')?.hasError('required') && taskForm.get('dueDate')?.touched) {
+                <p class="mt-1 text-sm text-red-400">La fecha es requerida</p>
+            }
+        </div>
+
+        <!-- Botón de envío -->
+        <div class="pt-4 text-right">
+            <button type="button" (click)="createTask()" [disabled]="!taskForm.valid"
+                    class="bg-blue-600 hover:bg-blue-700 text-white font-medium py-2 px-6 rounded-md
+                           disabled:bg-gray-500 disabled:cursor-not-allowed transition-colors">
+                Crear Tarea
+            </button>
+        </div>
+    </form>
 </div>
