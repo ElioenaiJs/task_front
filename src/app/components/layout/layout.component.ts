@@ -116,6 +116,7 @@ export class LayoutComponent implements OnInit {
     }).subscribe({
       next: () => {
         this.getAllTasks();
+        this.pendingtasks();
       },
       error: (error) => {
         console.error('Error deleting task:', error);
