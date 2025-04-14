@@ -20,10 +20,12 @@ export interface Task {
 export class LayoutComponent implements OnInit {
   public userService = inject(ApiService);
   public tasks: Task[] = [];
+  public taskPending: Task[] = [];
   public dialog = inject(MatDialog);
 
   ngOnInit() {
     this.getAllTasks();
+    this.pendingtasks();
   }
 
   openDialog() {
@@ -38,6 +40,26 @@ export class LayoutComponent implements OnInit {
     });
   }
 
+  pendingtasks() {
+    this.userService.getService({
+      url: UriConstants.GET_TASKS,
+      headers: {
+        'accept': 'application/json',
+        'Content-Type': 'application/json'  
+      }
+    }).subscribe({
+      next: (response) => {
+        this.taskPending = response.filter((task: Task) => task.completed);
+      },
+      error: (error) => {
+        console.error('Error fetching tasks:', error);
+        if (error.status === 422) {
+          console.warn('Validation error:', error.error.detail);
+        }
+      }
+    });
+  }
+ 
   getAllTasks() {
     this.userService.getService({
       url: UriConstants.GET_TASKS,

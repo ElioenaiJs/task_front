@@ -31,10 +31,12 @@
       
       <div class="space-y-4">
         <!-- Cards para "Por Hacer" -->
-        <a href="#" class="block p-6 bg-white border border-gray-200 rounded-lg shadow-sm hover:bg-gray-100 dark:bg-gray-800 dark:border-gray-700 dark:hover:bg-gray-700">
-          <h5 class="mb-2 text-2xl font-bold tracking-tight text-gray-900 dark:text-white">Tarea pendiente</h5>
-          <p class="font-normal text-gray-700 dark:text-gray-400">Descripción de la tarea pendiente.</p>
-        </a>
+        @for (item of taskPending; track $index) {
+          <a href="#" class="block p-6 bg-white border border-gray-200 rounded-lg shadow-sm hover:bg-gray-100 dark:bg-gray-800 dark:border-gray-700 dark:hover:bg-gray-700">
+            <h5 class="mb-2 text-2xl font-bold tracking-tight text-gray-900 dark:text-white">{{item.title}}</h5>
+            <p class="font-normal text-gray-700 dark:text-gray-400">{{item.description}}</p>
+          </a>
+        }
       </div>
     </div>
   
