@@ -17,7 +17,16 @@
                 <p class="font-normal text-gray-700 dark:text-gray-400">{{ item.description }}</p>
                 <p class="font-normal text-gray-700 dark:text-gray-400">
                   {{formatStringDate(item.due_date)}}
-                </p>      
+                </p>    
+                
+                <div class="mt-2 text-right space-x-2">
+                  <button class="bg-red-500 hover:bg-red-700 text-white font-bold py-1 px-2 rounded" (click)="deleteTask(item.id)">
+                  Eliminar
+                  </button>
+                  <button class="bg-yellow-500 hover:bg-yellow-700 text-white font-bold py-1 px-2 rounded" (click)="updateTask(item)">
+                  Actualizar
+                  </button>
+                </div>  
             </a>
         }
         
@@ -44,7 +53,7 @@
               Eliminar
               </button>
               <button class="bg-yellow-500 hover:bg-yellow-700 text-white font-bold py-1 px-2 rounded" (click)="updateTask(item)">
-              Actualizar
+              Finalizar
               </button>
             </div>
           </a> 

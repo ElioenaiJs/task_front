@@ -119,6 +119,8 @@ export class LayoutComponent implements OnInit {
       next: () => {
         this.getAllTasks();
         this.pendingtasks();
+        this.completedtasks();
+        this.overdueTasks();
       },
       error: (error) => {
         console.error('Error deleting task:', error);
