@@ -4,6 +4,7 @@ import { UriConstants } from '../../../utils/uris.constants';
 import { MatDialog } from '@angular/material/dialog';
 import { CommonModule } from '@angular/common';
 import { DialogInsertTaskComponent } from '../dialog-insert-task/dialog-insert-task.component';
+import { DialogUpdateTaskComponent } from '../dialog-update-task/dialog-update-task.component';
 export interface Task {
   id: number;
   title: string;
@@ -42,6 +43,7 @@ export class LayoutComponent implements OnInit {
       if (result) {
         this.tasks.push(result);
       }
+      this.pendingtasks();
     });
   }
 
@@ -125,20 +127,20 @@ export class LayoutComponent implements OnInit {
   }
 
   updateTask(task: Task) {
-    this.userService.patchService({
-      url: UriConstants.UPDATE_TASK(task.id),
-      data: task,
-      headers: {
-        'accept': 'application/json',
-        'Content-Type': 'application/json'
+    const dialogRef = this.dialog.open(DialogUpdateTaskComponent, {
+      width: '600px',
+      data: {task}
+    });
+
+    dialogRef.afterClosed().subscribe((updatedTask: Task | false) => {
+      if (updatedTask) {
+        const index = this.tasks.findIndex(t => t.id === updatedTask.id);
+        if (index !== -1) {
+          this.tasks[index] = updatedTask;
+        }
       }
-    }).subscribe({
-      next: () => {
-        this.getAllTasks();
-      },
-      error: (error) => {
-        console.error('Error updating task:', error);
-      }
+      this.completedtasks();
+      this.pendingtasks();
     });
   }
 
@@ -181,9 +183,7 @@ export class LayoutComponent implements OnInit {
     return new Date(dateString).toLocaleString('es-ES', {
       day: '2-digit',
       month: '2-digit',
-      year: 'numeric',
-      hour: '2-digit',
-      minute: '2-digit'
+      year: 'numeric'
     });
   }
 }
