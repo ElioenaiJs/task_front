@@ -6,4 +6,5 @@ export class UriConstants {
     public static readonly UPDATE_TASK = (id: number) => `${UriConstants.BASE_URL}/${id}`;
     public static readonly DELETE_TASK = (id: number) => `${UriConstants.BASE_URL}/${id}`;
     public static readonly GET_TASKS_OVER = UriConstants.BASE_URL + '/overdue';
+    public static readonly GET_TASKS_PENDING = UriConstants.BASE_URL + '/earring';
 }

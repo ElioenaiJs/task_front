@@ -44,19 +44,20 @@ export class LayoutComponent implements OnInit {
       if (result) {
         this.tasks.push(result);
       }
-      this.pendingtasks();
+      this.refreshTaskLists();
     });
   }
 
   pendingtasks() {
     this.userService.getService({
-      url: UriConstants.GET_TASKS,
+      url: UriConstants.GET_TASKS_PENDING,
       headers: {
         'accept': 'application/json',
         'Content-Type': 'application/json'
       }
     }).subscribe({
       next: (response) => {
+        console.log('Pending tasks:', response);
         this.taskPending = response.filter((task: Task) => !task.completed);
       },
       error: (error) => {
