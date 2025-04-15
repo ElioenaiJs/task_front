@@ -11,10 +11,10 @@ import { ApiModel } from '../models/api/api.model';
   providedIn: 'root',
 })
 export class ApiService<GET = {}, POST = {}, PUT = {}, PATCH = {}, DELETE = {}> {
-  constructor(private http: HttpClient) {}
+  constructor(private http: HttpClient) { }
 
   /** Para realizar las peticiones GET */
-  getService(reqParams: ApiModel.ReqParams): Observable< GET> {
+  getService(reqParams: ApiModel.ReqParams): Observable<GET> {
     const options = {
       params: reqParams.params ? reqParams.params : {},
       responseType: reqParams.responseType || 'json'
@@ -27,7 +27,7 @@ export class ApiService<GET = {}, POST = {}, PUT = {}, PATCH = {}, DELETE = {}> 
     );
   }
 
-  getListService(reqParams: ApiModel.ReqParams): Observable< GET[]> {
+  getListService(reqParams: ApiModel.ReqParams): Observable<GET[]> {
     const options = {
       params: reqParams.params ? reqParams.params : {},
     };
@@ -39,13 +39,12 @@ export class ApiService<GET = {}, POST = {}, PUT = {}, PATCH = {}, DELETE = {}> 
     );
   }
 
-
   /** Para realizar las peticiones POST */
   postService(reqParams: ApiModel.ReqParams): Observable<POST> {
     const options = {
       params: reqParams.params ? reqParams.params : {},
     };
-    return this.http.post<POST>(reqParams.url, reqParams.data, options ).pipe(  
+    return this.http.post<POST>(reqParams.url, reqParams.data, options).pipe(
       map((res) => res),
       catchError(this.handleError)
     );
@@ -66,7 +65,7 @@ export class ApiService<GET = {}, POST = {}, PUT = {}, PATCH = {}, DELETE = {}> 
   handleError(error: HttpErrorResponse) {
     return throwError(() => error.error.message || 'Ocurrió un error');
   }
-  
+
   /** Para realizar las peticiones PATCH */
   patchService(reqParams: ApiModel.ReqParams): Observable<PATCH> {
     const options = {

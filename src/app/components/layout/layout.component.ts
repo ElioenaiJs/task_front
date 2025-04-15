@@ -55,7 +55,6 @@ export class LayoutComponent implements OnInit {
       }
     }).subscribe({
       next: (response) => {
-        console.log('Pending tasks:', response);
         this.taskPending = response.filter((task: Task) => !task.completed);
       },
       error: (error) => {

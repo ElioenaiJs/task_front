@@ -18,8 +18,8 @@ export class DialogUpdateAllDataTaskComponent {
   protected data = inject(MAT_DIALOG_DATA) as { task: Task };
   private userService = inject(ApiService);
 
-  originalTask: Task = { ...this.data.task }; 
-  task: Task = { 
+  originalTask: Task = { ...this.data.task };
+  task: Task = {
     ...this.data.task,
     completed: this.data.task.completed,
     due_date: this.data.task.due_date
@@ -30,7 +30,6 @@ export class DialogUpdateAllDataTaskComponent {
   }
 
   updateTaskData(): void {
-    // Prepara los datos a enviar (excluye completed)
     const { id, completed, ...updateData } = this.task;
 
     this.userService.putService({
@@ -47,7 +46,7 @@ export class DialogUpdateAllDataTaskComponent {
       next: (updatedTask) => {
         this.dialogRef.close({
           ...updatedTask,
-          completed: this.originalTask.completed 
+          completed: this.originalTask.completed
         });
       },
       error: (error) => {
@@ -63,5 +62,5 @@ export class DialogUpdateAllDataTaskComponent {
     const date = new Date(dateString);
     return date.toISOString().split('T')[0]; // "yyyy-MM-dd"
   }
-  
+
 }
