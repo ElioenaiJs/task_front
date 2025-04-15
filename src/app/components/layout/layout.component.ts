@@ -29,10 +29,7 @@ export class LayoutComponent implements OnInit {
   public dialog = inject(MatDialog);
 
   ngOnInit() {
-    this.getAllTasks();
-    this.pendingtasks();
-    this.completedtasks();
-    this.overdueTasks();
+    this.refreshTaskLists();
   }
 
   openDialog() {
@@ -136,8 +133,7 @@ export class LayoutComponent implements OnInit {
           this.tasks[index] = updatedTask;
         }
       }
-      this.completedtasks();
-      this.pendingtasks();
+      this.refreshTaskLists();
     });
   }
 
