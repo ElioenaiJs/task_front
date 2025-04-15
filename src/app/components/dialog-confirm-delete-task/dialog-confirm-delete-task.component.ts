@@ -6,14 +6,13 @@ import { ApiService } from '../../../services/api.service';
 import { UriConstants } from '../../../utils/uris.constants';
 
 @Component({
-  selector: 'app-dialog-update-task',
-  standalone: true,
+  selector: 'app-dialog-confirm-delete-task',
   imports: [CommonModule, FormsModule, MatDialogModule],
-  templateUrl: './dialog-update-task.component.html',
-  styleUrls: ['./dialog-update-task.component.scss']
+  templateUrl: './dialog-confirm-delete-task.component.html',
+  styleUrl: './dialog-confirm-delete-task.component.scss'
 })
-export class DialogUpdateTaskComponent {
-  protected dialogRef = inject(MatDialogRef<DialogUpdateTaskComponent>);
+export class DialogConfirmDeleteTaskComponent {
+  protected dialogRef = inject(MatDialogRef<DialogConfirmDeleteTaskComponent>);
   protected data = inject(MAT_DIALOG_DATA);
   private userService = inject(ApiService);
 
@@ -21,17 +20,9 @@ export class DialogUpdateTaskComponent {
     this.dialogRef.close();
   }
 
-  confirmCompletion(): void {
-    const payload = {
-      title: this.data.task.title,
-      description: this.data.task.description,
-      due_date: this.data.task.due_date,
-      completed: true
-    };
-
-    this.userService.putService({
-      url: UriConstants.UPDATE_TASK(this.data.task.id),
-      data: payload,
+  deleteTask(){
+    this.userService.deleteService({
+      url: UriConstants.DELETE_TASK(this.data.task.id),
       headers: {
         'accept': 'application/json',
         'Content-Type': 'application/json'
@@ -39,12 +30,10 @@ export class DialogUpdateTaskComponent {
     }).subscribe({
       next: () => {
         this.dialogRef.close(true);
+
       },
       error: (error) => {
-        console.error('Error updating task:', error);
-        if (error.error) {
-          console.log('Error details:', error.error);
-        }
+        console.error('Error deleting task:', error);
       }
     });
   }

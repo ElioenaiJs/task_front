@@ -5,6 +5,7 @@ import { MatDialog } from '@angular/material/dialog';
 import { CommonModule } from '@angular/common';
 import { DialogInsertTaskComponent } from '../dialog-insert-task/dialog-insert-task.component';
 import { DialogUpdateTaskComponent } from '../dialog-update-task/dialog-update-task.component';
+import { DialogConfirmDeleteTaskComponent } from '../dialog-confirm-delete-task/dialog-confirm-delete-task.component';
 export interface Task {
   id: number;
   title: string;
@@ -108,22 +109,15 @@ export class LayoutComponent implements OnInit {
     });
   }
 
-  deleteTask(id: number) {
-    this.userService.deleteService({
-      url: UriConstants.DELETE_TASK(id),
-      headers: {
-        'accept': 'application/json',
-        'Content-Type': 'application/json'
-      }
-    }).subscribe({
-      next: () => {
-        this.getAllTasks();
-        this.pendingtasks();
-        this.completedtasks();
-        this.overdueTasks();
-      },
-      error: (error) => {
-        console.error('Error deleting task:', error);
+  deleteTask(task: Task) {
+    const dialogRef = this.dialog.open(DialogConfirmDeleteTaskComponent, {
+      width: '600px',
+      data: { task } 
+    });
+  
+    dialogRef.afterClosed().subscribe((confirmed: boolean) => {
+      if (confirmed) {
+        this.refreshTaskLists();
       }
     });
   }
@@ -187,6 +181,13 @@ export class LayoutComponent implements OnInit {
       month: '2-digit',
       year: 'numeric'
     });
+  }
+
+  private refreshTaskLists() {
+    this.completedtasks();
+    this.pendingtasks();
+    this.getAllTasks();
+    this.overdueTasks();
   }
 }
 
