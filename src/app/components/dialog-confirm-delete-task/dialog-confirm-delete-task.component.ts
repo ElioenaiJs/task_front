@@ -30,7 +30,6 @@ export class DialogConfirmDeleteTaskComponent {
     }).subscribe({
       next: () => {
         this.dialogRef.close(true);
-
       },
       error: (error) => {
         console.error('Error deleting task:', error);

@@ -6,6 +6,7 @@ import { CommonModule } from '@angular/common';
 import { DialogInsertTaskComponent } from '../dialog-insert-task/dialog-insert-task.component';
 import { DialogUpdateTaskComponent } from '../dialog-update-task/dialog-update-task.component';
 import { DialogConfirmDeleteTaskComponent } from '../dialog-confirm-delete-task/dialog-confirm-delete-task.component';
+import { DialogUpdateAllDataTaskComponent } from '../dialog-update-all-data-task/dialog-update-all-data-task.component';
 export interface Task {
   id: number;
   title: string;
@@ -96,7 +97,6 @@ export class LayoutComponent implements OnInit {
     }).subscribe({
       next: (response) => {
         this.tasks = response;
-        console.log(this.tasks);
       },
       error: (error) => {
         console.error('Error fetching tasks:', error);
@@ -115,7 +115,22 @@ export class LayoutComponent implements OnInit {
   
     dialogRef.afterClosed().subscribe((confirmed: boolean) => {
       if (confirmed) {
-        this.refreshTaskLists();
+        this.removeTaskFromAllLists(task.id);
+  
+        this.userService.deleteService({
+          url: `${UriConstants.DELETE_TASK}/${task.id}`,
+          headers: {
+            'accept': 'application/json',
+            'Content-Type': 'application/json'
+          }
+        }).subscribe({
+          next: () => {
+            this.overdueTasks();
+          },
+          error: (error) => {
+            this.refreshTaskLists();
+          }
+        });
       }
     });
   }
@@ -137,23 +152,6 @@ export class LayoutComponent implements OnInit {
     });
   }
 
-  getTaskById(id: number) {
-    this.userService.getService({
-      url: UriConstants.GET_TASK(id),
-      headers: {
-        'accept': 'application/json',
-        'Content-Type': 'application/json'
-      }
-    }).subscribe({
-      next: (response) => {
-        console.log('Task details:', response);
-      },
-      error: (error) => {
-        console.error('Error fetching task:', error);
-      }
-    });
-  }
-
   overdueTasks() {
     this.userService.getService({
       url: UriConstants.GET_TASKS_OVER,
@@ -171,6 +169,19 @@ export class LayoutComponent implements OnInit {
     });
   }
 
+  updateAllDataTasks(task: Task) {
+    const dialogRef = this.dialog.open(DialogUpdateAllDataTaskComponent, {
+      width: '600px',
+      data: { task }
+    });
+
+    dialogRef.afterClosed().subscribe((updatedTask: Task | false) => {
+      if (updatedTask) {
+        this.refreshTaskLists();
+      }
+    });
+  }
+
   formatStringDate(dateString: string): string {
     if (!dateString) return 'Sin fecha';
     return new Date(dateString).toLocaleString('es-ES', {
@@ -178,6 +189,13 @@ export class LayoutComponent implements OnInit {
       month: '2-digit',
       year: 'numeric'
     });
+  }
+
+  private removeTaskFromAllLists(taskId: number) {
+    this.tasks = this.tasks.filter(t => t.id !== taskId);
+    this.taskPending = this.taskPending.filter(t => t.id !== taskId);
+    this.taskComplet = this.taskComplet.filter(t => t.id !== taskId);
+    this.taskOverdue = this.taskOverdue.filter(t => t.id !== taskId);
   }
 
   private refreshTaskLists() {
